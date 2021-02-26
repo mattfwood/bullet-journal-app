@@ -6,7 +6,7 @@
     "build": "blitz build",
     "start": "blitz start",
     "studio": "blitz prisma studio",
-    "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
+    "lint": "eslint --cache \"**/*.js\" --fix",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -19,36 +19,45 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && pretty-quick --staged",
-      "pre-push": "tsc && npm run lint && npm run test"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": [
+    "*.js": [
       "eslint --fix"
+    ],
+    "{app,test}/**/*.rb": [
+      "bundle exec rubocop -a"
     ]
   },
   "dependencies": {
-    "prisma": "~2.17",
+    "@headlessui/react": "0.3.1-d519f7d",
     "@prisma/client": "~2.17",
+    "@tailwindcss/forms": "0.2.1",
     "blitz": "0.30.5",
+    "eslint-import-resolver-typescript": "2.4.0",
+    "formik": "2.2.6",
+    "prisma": "~2.17",
     "react": "0.0.0-experimental-3310209d0",
     "react-dom": "0.0.0-experimental-3310209d0",
     "react-error-boundary": "3.1.0",
+    "tailwindcss": "2",
     "typescript": "4.2.2",
-    "zod": "1.11.11",
-    "formik": "2.2.6"
+    "zod": "1.11.11"
   },
   "devDependencies": {
-    "@types/react": "17.0.2",
     "@types/preview-email": "2.0.0",
+    "@types/react": "17.0.2",
+    "autoprefixer": "10",
     "eslint": "7.20.0",
-    "husky": "4.3.8",
+    "eslint-config-cratebind": "6.0.3",
+    "husky": "4",
     "lint-staged": "10.5.4",
+    "postcss": "8",
     "prettier": "2.2.1",
+    "prettier-plugin-prisma": "0.4.0",
     "pretty-quick": "3.1.0",
-    "preview-email": "3.0.3",
-    "prettier-plugin-prisma": "0.4.0"
+    "preview-email": "3.0.3"
   },
   "private": true
 }
