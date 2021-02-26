@@ -25,7 +25,16 @@ const MenuItems = ({ className, ...props }) => (
   />
 )
 
-const MenuItem = ({ className, children, as: Comp = 'a', ...props }) => (
+const MenuItem = ({
+  className,
+  children,
+  as: Comp = 'a',
+  ...props
+}: {
+  className?: string
+  children: React.ReactNode
+  as: React.ElementType
+} & any) => (
   <Menu.Item>
     {({ active }) => (
       <Comp
