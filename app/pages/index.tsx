@@ -1,9 +1,7 @@
-import { useState } from 'react'
 import { Link, BlitzPage, useMutation } from 'blitz'
 import Layout from 'app/core/layouts/Layout'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 import logout from 'app/auth/mutations/logout'
-import { Transition } from '@headlessui/react'
 import Dashboard from 'app/core/components/Dashboard'
 
 const UserInfo = () => {
