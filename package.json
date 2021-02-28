@@ -9,14 +9,14 @@
     "studio": "blitz prisma studio",
     "lint": "eslint --cache \"**/*.js\" --fix",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prisma:generate": "blitz prisma generate",
+    "db:migrate": "blitz prisma migrate dev --preview-feature",
+    "db:deploy": "blitz prisma migrate deploy --preview-feature",
+    "db:reset": "blitz prisma migrate reset --preview-feature"
   },
   "prisma": {
     "schema": "db/schema.prisma"
-  },
-  "prettier": {
-    "semi": false,
-    "printWidth": 100
   },
   "husky": {
     "hooks": {
@@ -39,6 +39,7 @@
     "dayjs": "1.10.4",
     "eslint-import-resolver-typescript": "2.4.0",
     "formik": "2.2.6",
+    "passport-google-oauth20": "2.0.0",
     "prisma": "~2.17",
     "react": "0.0.0-experimental-3310209d0",
     "react-dom": "0.0.0-experimental-3310209d0",
@@ -58,7 +59,6 @@
     "postcss": "8",
     "prettier": "2.2.1",
     "prettier-plugin-prisma": "0.4.0",
-    "pretty-quick": "3.1.0",
     "preview-email": "3.0.3"
   },
   "private": true

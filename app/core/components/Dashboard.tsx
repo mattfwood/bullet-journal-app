@@ -1,6 +1,8 @@
 import React from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import dayjs from 'dayjs'
+import { useCurrentUser } from '../hooks/useCurrentUser'
+import { User } from 'db'
 
 /*
   This example requires Tailwind CSS v2.0+
@@ -54,7 +56,10 @@ const MenuItem = ({
 // @TODO: Replace this with real data
 const UserDropdownContent = ({
   open = false,
-  user = { name: 'Matt Wood', email: 'matt@gmail.com' },
+  user,
+}: {
+  open: boolean
+  user: Pick<User, 'id' | 'name' | 'email' | 'role'> | null
 }) => {
   return (
     <Transition
@@ -70,7 +75,7 @@ const UserDropdownContent = ({
         <div className="px-4 py-3">
           <p className="text-sm leading-5">Signed in as</p>
           <p className="text-sm font-medium leading-5 text-gray-900 truncate">
-            {user.email}
+            {user?.email}
           </p>
         </div>
 
@@ -281,6 +286,7 @@ const MobileMenuContent = ({ open = false }) => {
 }
 
 export default function Dashboard() {
+  const currentUser = useCurrentUser()
   return (
     <div className="h-screen flex overflow-hidden bg-white">
       {/* Static sidebar for desktop */}
@@ -314,7 +320,7 @@ export default function Dashboard() {
                           />
                           <span className="flex-1 min-w-0">
                             <span className="text-gray-900 text-sm font-medium truncate">
-                              Matt Wood
+                              {currentUser?.name}
                             </span>
                             {/* <br />
                             <span className="text-gray-500 text-sm truncate">
@@ -339,7 +345,7 @@ export default function Dashboard() {
                       </span>
                     </Menu.Button>
                   </div>
-                  <UserDropdownContent open={open} />
+                  <UserDropdownContent open={open} user={currentUser} />
                 </div>
               )}
             </Menu>
@@ -402,7 +408,7 @@ export default function Dashboard() {
                       d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                     />
                   </svg>
-                  {dayjs().format('MMM D')}
+                  Home
                 </a>
                 <a
                   href="#"
@@ -588,7 +594,7 @@ export default function Dashboard() {
                             From: "transform opacity-100 scale-100"
                             To: "transform opacity-0 scale-95"
                         */}
-                        <UserDropdownContent open={open} />
+                        <UserDropdownContent open={open} user={currentUser} />
                         {/* <Menu.Items
                           className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200"
                           role="menu"
@@ -622,10 +628,7 @@ export default function Dashboard() {
             </>
           )}
         </Popover>
-        <main
-          className="flex-1 relative z-0 overflow-y-auto focus:outline-none"
-          tabIndex={0}
-        >
+        <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
           {/* Page title & actions */}
           <div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div className="flex-1 min-w-0">
@@ -643,11 +646,11 @@ export default function Dashboard() {
             </div>
           </div>
           {/* Projects list (only on smallest breakpoint) */}
-          <div className="mt-10">
+          <div>
             <div className="px-4 sm:px-6">
               <h2 className="text-gray-500 text-xs font-medium uppercase tracking-wide" />
             </div>
-            <ul className="mt-3 border-t border-gray-200 divide-y divide-gray-100">
+            <ul className="divide-y divide-gray-100">
               <li>
                 <a
                   href="#"

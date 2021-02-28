@@ -5,12 +5,20 @@ import {
   AuthenticationError,
   AuthorizationError,
   ErrorFallbackProps,
-} from "blitz"
-import { ErrorBoundary } from "react-error-boundary"
-import { queryCache } from "react-query"
-import LoginForm from "app/auth/components/LoginForm"
+} from 'blitz'
+import { ErrorBoundary } from 'react-error-boundary'
+import { queryCache } from 'react-query'
+import LoginForm from 'app/auth/components/LoginForm'
 
-import "app/core/styles/index.css";
+import 'app/core/styles/index.css'
+import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
+import { Suspense } from 'react'
+
+const AuthView = ({ children }) => {
+  const currentUser = useCurrentUser()
+
+  return !currentUser ? <LoginForm /> : children
+}
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
@@ -26,7 +34,9 @@ export default function App({ Component, pageProps }: AppProps) {
         queryCache.resetErrorBoundaries()
       }}
     >
-      {getLayout(<Component {...pageProps} />)}
+      <Suspense fallback="Loading...">
+        <AuthView>{getLayout(<Component {...pageProps} />)}</AuthView>
+      </Suspense>
     </ErrorBoundary>
   )
 }
@@ -43,7 +53,10 @@ function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
     )
   } else {
     return (
-      <ErrorComponent statusCode={error.statusCode || 400} title={error.message || error.name} />
+      <ErrorComponent
+        statusCode={error.statusCode || 400}
+        title={error.message || error.name}
+      />
     )
   }
 }
