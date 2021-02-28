@@ -43,6 +43,8 @@ export default passportAuth({
             userId: user.id,
             roles: [user.role],
             source: 'google',
+            name: user.name,
+            email: user.email,
           }
           done(null, { publicData })
         }

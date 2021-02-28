@@ -6,8 +6,11 @@ import {
   AuthorizationError,
   ErrorFallbackProps,
 } from 'blitz'
+import App from 'next/app'
 import { ErrorBoundary } from 'react-error-boundary'
 import { queryCache } from 'react-query'
+import { getSessionContext } from '@blitzjs/server'
+
 import LoginForm from 'app/auth/components/LoginForm'
 
 import 'app/core/styles/index.css'
@@ -20,7 +23,7 @@ const AuthView = ({ children }) => {
   return !currentUser ? <LoginForm /> : children
 }
 
-export default function App({ Component, pageProps }: AppProps) {
+function AppPage({ Component, pageProps, ...props }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
   const router = useRouter()
 
@@ -34,9 +37,12 @@ export default function App({ Component, pageProps }: AppProps) {
         queryCache.resetErrorBoundaries()
       }}
     >
-      <Suspense fallback="Loading...">
+      {/* <Suspense fallback="Loading...">
         <AuthView>{getLayout(<Component {...pageProps} />)}</AuthView>
-      </Suspense>
+      </Suspense> */}
+      {getLayout(<Component {...pageProps} />)}
+      {/* <Suspense fallback="Loading...">
+      </Suspense> */}
     </ErrorBoundary>
   )
 }
@@ -60,3 +66,5 @@ function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
     )
   }
 }
+
+export default AppPage

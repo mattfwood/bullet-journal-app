@@ -3,6 +3,8 @@ import { Menu, Popover, Transition } from '@headlessui/react'
 import dayjs from 'dayjs'
 import { useCurrentUser } from '../hooks/useCurrentUser'
 import { User } from 'db'
+import { useMutation, useRouter } from '@blitzjs/core'
+import logout from 'app/auth/mutations/logout'
 
 /*
   This example requires Tailwind CSS v2.0+
@@ -61,6 +63,8 @@ const UserDropdownContent = ({
   open: boolean
   user: Pick<User, 'id' | 'name' | 'email' | 'role'> | null
 }) => {
+  const router = useRouter()
+  const [logoutMutation] = useMutation(logout)
   return (
     <Transition
       show={open}
@@ -84,7 +88,15 @@ const UserDropdownContent = ({
         </div>
 
         <div className="py-1">
-          <MenuItem href="/sign-out">Sign Out</MenuItem>
+          <MenuItem
+            as="button"
+            onClick={async () => {
+              await logoutMutation()
+              router.replace('/')
+            }}
+          >
+            Sign Out
+          </MenuItem>
         </div>
       </MenuItems>
     </Transition>
