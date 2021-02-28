@@ -28,7 +28,12 @@ export default resolver.pipe(
     // This throws an error if credentials are invalid
     const user = await authenticateUser(email, password)
 
-    await ctx.session.$create({ userId: user.id, role: user.role as Role })
+    await ctx.session.$create({
+      userId: user.id,
+      role: user.role as Role,
+      name: user.name,
+      email: user.email,
+    })
 
     return user
   }

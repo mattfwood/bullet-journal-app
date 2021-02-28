@@ -2,7 +2,6 @@ import { Link, BlitzPage, useMutation, GetServerSideProps } from 'blitz'
 import { getSessionContext } from '@blitzjs/server'
 import Layout from 'app/core/layouts/Layout'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
-import logout from 'app/auth/mutations/logout'
 import Dashboard from 'app/core/components/Dashboard'
 import { User } from 'db'
 

@@ -61,7 +61,7 @@ const UserDropdownContent = ({
   user,
 }: {
   open: boolean
-  user: Pick<User, 'id' | 'name' | 'email' | 'role'> | null
+  user?: Partial<User>
 }) => {
   const router = useRouter()
   const [logoutMutation] = useMutation(logout)
