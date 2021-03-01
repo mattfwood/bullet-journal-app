@@ -13,4 +13,4 @@ module.exports = {
     'react/display-name': 0,
     '@typescript-eslint/no-unused-vars': 2,
   },
-}
+};
