@@ -943,9 +943,16 @@ export default function Dashboard() {
               <h2 className="text-gray-500 text-xs font-medium uppercase tracking-wide" />
             </div>
             <ul className="divide-y divide-gray-100">
-              {entries?.map((entry) => (
-                <EntryItem key={entry.id} entry={entry} refetch={refetch} />
-              ))}
+              {entries
+                ?.filter((entry) => !Boolean(entry.completedAt))
+                .map((entry) => (
+                  <EntryItem key={entry.id} entry={entry} refetch={refetch} />
+                ))}
+              {entries
+                ?.filter((entry) => Boolean(entry.completedAt))
+                .map((entry) => (
+                  <EntryItem key={entry.id} entry={entry} refetch={refetch} />
+                ))}
               {/* More items... */}
             </ul>
             <EntryForm refetch={refetch} />
