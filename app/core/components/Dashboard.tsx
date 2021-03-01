@@ -492,11 +492,18 @@ const MobileMenuContent = ({ open = false }) => {
 };
 
 export default function Dashboard() {
+  const [date, setDate] = useState(dayjs());
   const currentUser = useCurrentUser();
   const [data, { refetch }] = useQuery(
     getEntries,
     {
       orderBy: { createdAt: 'asc' },
+      where: {
+        createdAt: {
+          gte: date.startOf('day'),
+          lte: date.endOf('day'),
+        },
+      },
       //   where: {
       //     ...(showCompleted
       //       ? {
@@ -868,10 +875,42 @@ export default function Dashboard() {
         <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
           {/* Page title & actions */}
           <div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-                {dayjs().format('MMMM D')}
+            <div className="flex min-w-0 items-center">
+              <button
+                className="w-6 h-6 text-gray-400 hover:text-gray-500"
+                onClick={() => setDate((prev) => prev.subtract(1, 'day'))}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+              <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate mx-1">
+                {date.format('MMMM D')}
               </h1>
+              <button
+                className="w-6 h-6 text-gray-400 hover:text-gray-500"
+                onClick={() => setDate((prev) => prev.add(1, 'day'))}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
             </div>
             <div className="mt-4 flex sm:mt-0 sm:ml-4">
               <button
