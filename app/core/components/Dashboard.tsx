@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Menu, Popover, Transition } from '@headlessui/react';
 import dayjs from 'dayjs';
 import { useCurrentUser } from '../hooks/useCurrentUser';
-import { User } from 'db';
+import { Entry, User } from 'db';
 import { useMutation, useQuery, useRouter } from '@blitzjs/core';
 import logout from 'app/auth/mutations/logout';
 import createEntry from 'app/entries/mutations/createEntry';
 import getEntries from 'app/entries/queries/getEntries';
+import updateEntry from 'app/entries/mutations/updateEntry';
 
 /*
   This example requires Tailwind CSS v2.0+
@@ -25,23 +26,71 @@ require('@tailwindcss/forms'),
   ```
 */
 
-const EntryItem = ({ entry }) => {
+const EntryItem = ({
+  entry,
+  refetch,
+}: {
+  entry: Entry;
+  refetch: () => void;
+}) => {
+  const [updateEntryMutation] = useMutation(updateEntry);
+
+  async function handleUpdate(updates) {
+    await updateEntryMutation({
+      id: entry.id,
+      ...updates,
+    });
+    await refetch();
+  }
+
   return (
     <li>
       <a
         href="#"
         className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6"
       >
-        <span className="flex items-center truncate space-x-3">
+        <span className="flex items-center truncate space-x-2 pl-1">
+          <button
+            className="bg-white inline-flex items-center justify-center text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 w-6 h-6 my-1"
+            onClick={() => {
+              handleUpdate({
+                completedAt: Boolean(entry.completedAt) ? null : new Date(),
+              });
+            }}
+          >
+            {Boolean(entry.completedAt) ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-5 w-5 -m-1"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <span
+                className="w-2.5 h-2.5 flex-shrink-0 rounded-full bg-pink-600"
+                aria-hidden="true"
+              />
+            )}
+          </button>
           <span
-            className="w-2.5 h-2.5 flex-shrink-0 rounded-full bg-pink-600"
-            aria-hidden="true"
-          />
-          <span className="font-medium truncate text-sm leading-6">
+            className={
+              Boolean(entry.completedAt)
+                ? 'truncate font-light text-sm text-gray-400'
+                : 'font-medium truncate text-sm leading-6'
+            }
+          >
             {entry.title}
           </span>
-          {/* <span className="truncate font-normal text-gray-500">
-            This is a task
+          {/* <span className="">
+            {entry.title}
           </span> */}
         </span>
         {/* Heroicon name: solid/chevron-right */}
@@ -147,16 +196,15 @@ const EntryForm = ({ refetch }: { refetch: () => void }) => {
     });
 
     await refetch();
+
+    setTitle('');
   }
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) =>
     setTitle(event.currentTarget.value);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="px-3 mt-1 relative rounded-md shadow-sm"
-    >
+    <form onSubmit={handleSubmit} className="px-3 mt-1 relative">
       <input
         type="text"
         name="title"
@@ -841,7 +889,7 @@ export default function Dashboard() {
             </div>
             <ul className="divide-y divide-gray-100">
               {entries?.map((entry) => (
-                <EntryItem entry={entry} />
+                <EntryItem entry={entry} refetch={refetch} />
               ))}
               {/* More items... */}
             </ul>
