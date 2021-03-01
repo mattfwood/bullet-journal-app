@@ -5,7 +5,7 @@ import * as z from 'zod';
 const UpdateEntry = z
   .object({
     id: z.number(),
-    name: z.string(),
+    title: z.string(),
   })
   .nonstrict();
 
