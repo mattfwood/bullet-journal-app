@@ -1,9 +1,9 @@
-import { Link, BlitzPage, useMutation, GetServerSideProps } from 'blitz'
-import { getSessionContext } from '@blitzjs/server'
-import Layout from 'app/core/layouts/Layout'
-import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
-import Dashboard from 'app/core/components/Dashboard'
-import { User } from 'db'
+import { BlitzPage, GetServerSideProps } from 'blitz';
+import { getSessionContext } from '@blitzjs/server';
+import Layout from 'app/core/layouts/Layout';
+import { useCurrentUser } from 'app/core/hooks/useCurrentUser';
+import Dashboard from 'app/core/components/Dashboard';
+import { User } from 'db';
 
 // const UserInfo = () => {
 //   const currentUser = useCurrentUser()
@@ -46,21 +46,21 @@ import { User } from 'db'
 // }
 
 const Home: BlitzPage<{ user?: Partial<User> }> = ({ user }) => {
-  useCurrentUser(user)
-  return <Dashboard />
-}
+  useCurrentUser(user);
+  return <Dashboard />;
+};
 
-Home.suppressFirstRenderFlicker = true
-Home.authenticate = true
-Home.getLayout = (page) => <Layout title="Home">{page}</Layout>
+Home.suppressFirstRenderFlicker = true;
+Home.authenticate = true;
+Home.getLayout = (page) => <Layout title="Home">{page}</Layout>;
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const session = await getSessionContext(req, res)
+  const session = await getSessionContext(req, res);
   return {
     props: {
       user: session.$publicData,
     },
-  }
-}
+  };
+};
 
-export default Home
+export default Home;

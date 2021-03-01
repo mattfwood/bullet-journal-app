@@ -1,4 +1,4 @@
-import { Document, Html, DocumentHead, Main, BlitzScript } from 'blitz'
+import { Document, Html, DocumentHead, Main, BlitzScript } from 'blitz';
 // import { getSessionContext } from '@blitzjs/server'
 // import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 
@@ -32,8 +32,8 @@ class MyDocument extends Document {
           <BlitzScript />
         </body>
       </Html>
-    )
+    );
   }
 }
 
-export default MyDocument
+export default MyDocument;

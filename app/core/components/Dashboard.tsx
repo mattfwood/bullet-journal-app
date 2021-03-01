@@ -1,10 +1,10 @@
-import React from 'react'
-import { Menu, Popover, Transition } from '@headlessui/react'
-import dayjs from 'dayjs'
-import { useCurrentUser } from '../hooks/useCurrentUser'
-import { User } from 'db'
-import { useMutation, useRouter } from '@blitzjs/core'
-import logout from 'app/auth/mutations/logout'
+import React from 'react';
+import { Menu, Popover, Transition } from '@headlessui/react';
+import dayjs from 'dayjs';
+import { useCurrentUser } from '../hooks/useCurrentUser';
+import { User } from 'db';
+import { useMutation, useRouter } from '@blitzjs/core';
+import logout from 'app/auth/mutations/logout';
 
 /*
   This example requires Tailwind CSS v2.0+
@@ -28,7 +28,7 @@ const MenuItems = ({ className, ...props }) => (
     className={`z-10 absolute right-0 ring-1 ring-black ring-opacity-5 lg:left-0 w-56 mt-2 origin-top bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none ${className}`}
     {...props}
   />
-)
+);
 
 const MenuItem = ({
   className,
@@ -36,9 +36,9 @@ const MenuItem = ({
   as: Comp = 'a',
   ...props
 }: {
-  className?: string
-  children: React.ReactNode
-  as: React.ElementType
+  className?: string;
+  children: React.ReactNode;
+  as: React.ElementType;
 } & any) => (
   <Menu.Item>
     {({ active }) => (
@@ -53,18 +53,18 @@ const MenuItem = ({
       </Comp>
     )}
   </Menu.Item>
-)
+);
 
 // @TODO: Replace this with real data
 const UserDropdownContent = ({
   open = false,
   user,
 }: {
-  open: boolean
-  user?: Partial<User>
+  open: boolean;
+  user?: Partial<User>;
 }) => {
-  const router = useRouter()
-  const [logoutMutation] = useMutation(logout)
+  const router = useRouter();
+  const [logoutMutation] = useMutation(logout);
   return (
     <Transition
       show={open}
@@ -91,8 +91,8 @@ const UserDropdownContent = ({
           <MenuItem
             as="button"
             onClick={async () => {
-              await logoutMutation()
-              router.replace('/')
+              await logoutMutation();
+              router.replace('/');
             }}
           >
             Sign Out
@@ -100,8 +100,8 @@ const UserDropdownContent = ({
         </div>
       </MenuItems>
     </Transition>
-  )
-}
+  );
+};
 
 /* Off-canvas menu for mobile, show/hide based on off-canvas menu state. */
 const MobileMenuContent = ({ open = false }) => {
@@ -294,11 +294,11 @@ const MobileMenuContent = ({ open = false }) => {
         </div>
       </Transition>
     </div>
-  )
-}
+  );
+};
 
 export default function Dashboard() {
-  const currentUser = useCurrentUser()
+  const currentUser = useCurrentUser();
   return (
     <div className="h-screen flex overflow-hidden bg-white">
       {/* Static sidebar for desktop */}
@@ -818,5 +818,5 @@ export default function Dashboard() {
         </main>
       </div>
     </div>
-  )
+  );
 }

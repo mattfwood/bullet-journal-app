@@ -1,24 +1,24 @@
-import { useState, ReactNode, PropsWithoutRef } from "react"
-import { Formik, FormikProps } from "formik"
-import * as z from "zod"
+import { useState, ReactNode, PropsWithoutRef } from 'react';
+import { Formik, FormikProps } from 'formik';
+import * as z from 'zod';
 
 export interface FormProps<S extends z.ZodType<any, any>>
-  extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
+  extends Omit<PropsWithoutRef<JSX.IntrinsicElements['form']>, 'onSubmit'> {
   /** All your form fields */
-  children?: ReactNode
+  children?: ReactNode;
   /** Text to display in the submit button */
-  submitText?: string
-  schema?: S
-  onSubmit: (values: z.infer<S>) => Promise<void | OnSubmitResult>
-  initialValues?: FormikProps<z.infer<S>>["initialValues"]
+  submitText?: string;
+  schema?: S;
+  onSubmit: (values: z.infer<S>) => Promise<void | OnSubmitResult>;
+  initialValues?: FormikProps<z.infer<S>>['initialValues'];
 }
 
 interface OnSubmitResult {
-  FORM_ERROR?: string
-  [prop: string]: any
+  FORM_ERROR?: string;
+  [prop: string]: any;
 }
 
-export const FORM_ERROR = "FORM_ERROR"
+export const FORM_ERROR = 'FORM_ERROR';
 
 export function Form<S extends z.ZodType<any, any>>({
   children,
@@ -28,27 +28,27 @@ export function Form<S extends z.ZodType<any, any>>({
   onSubmit,
   ...props
 }: FormProps<S>) {
-  const [formError, setFormError] = useState<string | null>(null)
+  const [formError, setFormError] = useState<string | null>(null);
   return (
     <Formik
       initialValues={initialValues || {}}
       validate={(values) => {
-        if (!schema) return
+        if (!schema) return;
         try {
-          schema.parse(values)
+          schema.parse(values);
         } catch (error) {
-          return error.formErrors.fieldErrors
+          return error.formErrors.fieldErrors;
         }
       }}
       onSubmit={async (values, { setErrors }) => {
-        const { FORM_ERROR, ...otherErrors } = (await onSubmit(values)) || {}
+        const { FORM_ERROR, ...otherErrors } = (await onSubmit(values)) || {};
 
         if (FORM_ERROR) {
-          setFormError(FORM_ERROR)
+          setFormError(FORM_ERROR);
         }
 
         if (Object.keys(otherErrors).length > 0) {
-          setErrors(otherErrors)
+          setErrors(otherErrors);
         }
       }}
     >
@@ -58,7 +58,7 @@ export function Form<S extends z.ZodType<any, any>>({
           {children}
 
           {formError && (
-            <div role="alert" style={{ color: "red" }}>
+            <div role="alert" style={{ color: 'red' }}>
               {formError}
             </div>
           )}
@@ -77,7 +77,7 @@ export function Form<S extends z.ZodType<any, any>>({
         </form>
       )}
     </Formik>
-  )
+  );
 }
 
-export default Form
+export default Form;
