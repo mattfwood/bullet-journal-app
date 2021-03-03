@@ -2,47 +2,63 @@ import React, { useState } from 'react';
 import { Menu, Popover, Transition } from '@headlessui/react';
 import dayjs from 'dayjs';
 import { useCurrentUser } from '../hooks/useCurrentUser';
-import { Entry, User } from 'db';
+import { Entry, Prisma, User } from 'db';
 import { useMutation, useQuery, useRouter } from '@blitzjs/core';
 import logout from 'app/auth/mutations/logout';
 import createEntry from 'app/entries/mutations/createEntry';
 import getEntries from 'app/entries/queries/getEntries';
 import updateEntry from 'app/entries/mutations/updateEntry';
 import deleteEntry from 'app/entries/mutations/deleteEntry';
+import Tooltip from '@reach/tooltip';
+// import '@reach/tooltip/styles.css';
 
-/*
-  This example requires Tailwind CSS v2.0+
+const PreviousTasks = () => {
+  const [data] = useQuery(
+    getEntries,
+    {
+      orderBy: { createdAt: 'asc' },
+      where: {
+        createdAt: {
+          lte: dayjs().startOf('day'),
+        },
+        completedAt: null,
+      },
+    },
+    {
+      suspense: false,
+    }
+  );
 
-  This example requires some changes to your config:
+  const entries = data?.entries;
 
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-// ...
-require('@tailwindcss/forms'),
-    ]
-  }
-  ```
-*/
+  return (
+    <div className="border-t border-gray-200 mt-4">
+      <div className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Previous Tasks
+      </div>
+      {entries?.map((entry) => (
+        <EntryItem key={entry.id} entry={entry} />
+      ))}
+    </div>
+  );
+};
 
 const EntryItem = ({
   entry,
   refetch,
 }: {
   entry: Entry;
-  refetch: () => void;
+  refetch?: () => void;
 }) => {
   const [updateEntryMutation] = useMutation(updateEntry);
   const [deleteEntryMutation] = useMutation(deleteEntry);
 
-  async function handleUpdate(updates) {
+  async function handleUpdate(updates: Prisma.EntryUpdateInput) {
     await updateEntryMutation({
       id: entry.id,
       ...updates,
     });
-    await refetch();
+    await refetch?.();
   }
 
   async function handleDelete() {
@@ -50,11 +66,13 @@ const EntryItem = ({
       id: entry.id,
     });
 
-    await refetch();
+    await refetch?.();
   }
 
+  const isPreviousEntry = dayjs(entry.createdAt).isBefore(dayjs(), 'day');
+
   return (
-    <li>
+    <div>
       <a
         href="#"
         className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6"
@@ -90,15 +108,52 @@ const EntryItem = ({
               />
             )}
           </button>
+          {isPreviousEntry && (
+            <Tooltip
+              label="Migrate Entry"
+              className="rounded-md bg-black text-white bg-opacity-70 px-3 py-2 border-none absolute z-10 whitespace-nowrap"
+              style={{
+                transform: 'translateX(calc(-50% + 12px))',
+              }}
+            >
+              <button
+                className="bg-white inline-flex items-center justify-center text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 w-6 h-6 my-1"
+                onClick={() =>
+                  handleUpdate({
+                    createdAt: new Date(),
+                  })
+                }
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </Tooltip>
+          )}
           <span
             className={
               Boolean(entry.completedAt)
-                ? 'truncate font-light text-sm text-gray-400'
-                : 'font-medium truncate text-sm leading-6'
+                ? 'font-light text-sm text-gray-400'
+                : 'hover:text-gray-600 font-medium text-sm leading-6'
             }
           >
             {entry.title}
           </span>
+          {isPreviousEntry && (
+            <span className="text-gray-500 text-sm leading-6">
+              {dayjs(entry.createdAt).format('MMMM D')}
+            </span>
+          )}
           {/* <span className="">
             {entry.title}
           </span> */}
@@ -197,7 +252,7 @@ const EntryItem = ({
           )}
         </Menu>
       </a>
-    </li>
+    </div>
   );
 };
 
@@ -909,7 +964,7 @@ export default function Dashboard() {
                 </svg>
               </button>
               <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate mx-1">
-                {date.format('MMMM D')}
+                {date.format('dddd, MMMM D')}
               </h1>
               <button
                 className="w-6 h-6 text-gray-400 hover:text-gray-500"
@@ -928,21 +983,24 @@ export default function Dashboard() {
                 </svg>
               </button>
             </div>
-            <div className="mt-4 flex sm:mt-0 sm:ml-4">
+            {/* <div className="mt-4 flex sm:mt-0 sm:ml-4">
               <button
                 type="button"
                 className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3"
               >
                 Create
               </button>
-            </div>
+            </div> */}
           </div>
           {/* Projects list (only on smallest breakpoint) */}
           <div>
             <div className="px-4 sm:px-6">
               <h2 className="text-gray-500 text-xs font-medium uppercase tracking-wide" />
             </div>
-            <ul className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100">
+              {entries?.length === 0 && (
+                <div className="text-gray-400 px-4 my-6">No Entries Today</div>
+              )}
               {entries
                 ?.filter((entry) => !Boolean(entry.completedAt))
                 .map((entry) => (
@@ -954,8 +1012,9 @@ export default function Dashboard() {
                   <EntryItem key={entry.id} entry={entry} refetch={refetch} />
                 ))}
               {/* More items... */}
-            </ul>
+            </div>
             <EntryForm refetch={refetch} />
+            <PreviousTasks />
           </div>
         </main>
       </div>
