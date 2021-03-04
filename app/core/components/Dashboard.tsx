@@ -894,7 +894,7 @@ export default function Dashboard() {
                             <span className="sr-only">Open user menu</span>
                             <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-gray-500">
                               <span className="text-sm font-medium leading-none text-white">
-                                {currentUser?.name[0]}
+                                {currentUser?.name?.[0]}
                               </span>
                             </span>
                             {/* <img
