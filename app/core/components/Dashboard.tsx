@@ -628,11 +628,11 @@ export default function Dashboard() {
                     >
                       <span className="flex w-full justify-between items-center">
                         <span className="flex min-w-0 items-center justify-between space-x-3">
-                          <img
+                          {/* <img
                             className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
                             src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixqx=zDbqWopVt0&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80"
                             alt=""
-                          />
+                          /> */}
                           <span className="flex-1 min-w-0">
                             <span className="text-gray-900 text-sm font-medium truncate">
                               {currentUser?.name}
@@ -892,11 +892,16 @@ export default function Dashboard() {
                             aria-haspopup="true"
                           >
                             <span className="sr-only">Open user menu</span>
-                            <img
+                            <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-gray-500">
+                              <span className="text-sm font-medium leading-none text-white">
+                                {currentUser?.name[0]}
+                              </span>
+                            </span>
+                            {/* <img
                               className="h-8 w-8 rounded-full"
                               src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixqx=zDbqWopVt0&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                               alt=""
-                            />
+                            /> */}
                           </Menu.Button>
                         </div>
                         {/*
