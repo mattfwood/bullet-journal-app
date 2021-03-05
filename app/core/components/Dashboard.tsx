@@ -13,7 +13,7 @@ import Tooltip from '@reach/tooltip';
 // import '@reach/tooltip/styles.css';
 
 const PreviousTasks = () => {
-  const [data] = useQuery(
+  const [data, { refetch }] = useQuery(
     getEntries,
     {
       orderBy: { createdAt: 'asc' },
@@ -37,7 +37,7 @@ const PreviousTasks = () => {
         Previous Tasks
       </div>
       {entries?.map((entry) => (
-        <EntryItem key={entry.id} entry={entry} />
+        <EntryItem key={entry.id} refetch={refetch} entry={entry} />
       ))}
     </div>
   );
@@ -75,7 +75,7 @@ const EntryItem = ({
     <div>
       <a
         href="#"
-        className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6"
+        className="group flex items-center justify-between px-3 py-4 hover:bg-gray-50"
       >
         <span className="flex items-center truncate space-x-2 pl-1">
           <button
@@ -103,7 +103,7 @@ const EntryItem = ({
               </svg>
             ) : (
               <span
-                className="w-2.5 h-2.5 flex-shrink-0 rounded-full bg-pink-600"
+                className="w-2.5 h-2.5 flex-shrink-0 rounded-full bg-purple-500"
                 aria-hidden="true"
               />
             )}
